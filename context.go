@@ -172,7 +172,16 @@ func (c *Context) GetQueryParam(name string) (string, bool) {
 	}
 }
 
-func (c *Context) QueryParams() map[string]string {
+type Values map[string]string
+
+func (v Values) Get(name string) string {
+	if vv, ok := v[name]; ok {
+		return vv
+	}
+	return ""
+}
+
+func (c *Context) QueryParams() Values {
 	if c.q == nil {
 		c.q = c.DefaultCtx.Queries()
 	}
