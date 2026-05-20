@@ -19,16 +19,17 @@ func NewFiberApp(handlers ...any) *fiber.App {
 
 func WithLogger(name string) fiber.Handler {
 	return logger.New(logger.Config{
-	    CustomTags: map[string]logger.LogFunc{
-		"logger_name": func(output logger.Buffer, c fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
-			return output.WriteString(name)
-		},
-		"host_name": func(output logger.Buffer, c fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
-			return output.WriteString(c.Host())
-		},
-	    },
-	    // For more options, see the Config section
-	    Format: "[${logger_name}] ${time} | ${status} | \t ${latency} | ${host_name} | ${method} ${url}\n",
+			CustomTags: map[string]logger.LogFunc{
+				"logger_name": func(output logger.Buffer, c fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+					return output.WriteString(name)
+				},
+				"host_name": func(output logger.Buffer, c fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
+					return output.WriteString(c.Host())
+				},
+			},
+			// For more options, see the Config section
+			Format: "[${logger_name}] ${time} | ${status} | \t ${latency} | ${host_name} | ${method} ${url}\n",
+			ForceColors: true,
 	})
 }
 
