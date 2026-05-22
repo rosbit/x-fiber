@@ -18,6 +18,10 @@ type Context struct {
 	q url.Values
 }
 
+func (c *Context) Init() {
+	c.q = nil
+}
+
 func (c *Context) Param(name string) string {
 	return c.DefaultCtx.Params(name)
 }
