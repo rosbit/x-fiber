@@ -4,6 +4,7 @@ import (
 	recoverer "github.com/gofiber/fiber/v3/middleware/recover"
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/fiber/v3"
+	"fmt"
 )
 
 func NewFiberApp(handlers ...any) *fiber.App {
@@ -15,6 +16,15 @@ func NewFiberApp(handlers ...any) *fiber.App {
 	app.Use(recoverer.New())
 	app.Use(handlers...)
 	return app
+}
+
+func ToXFiberCtx(ctx fiber.Ctx) (*Context, error) {
+	c, ok := ctx.(*Context)
+	if !ok {
+		return nil, fmt.Errorf("bad context")
+	}
+	c.Init()
+	return c, nil
 }
 
 func WithLogger(name string) fiber.Handler {
