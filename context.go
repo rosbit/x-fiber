@@ -10,11 +10,12 @@ import (
 	"bytes"
 	"io"
 	"fmt"
+	"net/url"
 )
 
 type Context struct {
 	*fiber.DefaultCtx
-	q map[string]string
+	q url.Values
 }
 
 func (c *Context) Param(name string) string {
@@ -163,27 +164,27 @@ func (c *Context) QueryParam(name string) string {
 
 func (c *Context) GetQueryParam(name string) (string, bool) {
 	if c.q == nil {
-		c.q = c.DefaultCtx.Queries()
+		c.q = c.QueryParams()
 	}
 	if val, ok := c.q[name]; ok {
-		return val, true
+		return val[0], true
 	} else {
 		return "", false
 	}
 }
 
-type Values map[string]string
-
-func (v Values) Get(name string) string {
-	if vv, ok := v[name]; ok {
-		return vv
-	}
-	return ""
-}
-
-func (c *Context) QueryParams() Values {
+func (c *Context) QueryParams() url.Values {
 	if c.q == nil {
-		c.q = c.DefaultCtx.Queries()
+		qs := c.QueryString()
+		if len(qs) == 0 {
+			c.q = url.Values{}
+		} else {
+			if u, err := url.ParseQuery(qs); err != nil {
+				c.q = url.Values{}
+			} else {
+				c.q = u
+			}
+		}
 	}
 	return c.q
 }
