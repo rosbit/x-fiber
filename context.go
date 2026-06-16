@@ -346,3 +346,11 @@ func (c *Context) RemoteAddr() string {
 	}
 	return c.DefaultCtx.IP()
 }
+
+func (c *Context) RequestURI() string {
+	return c.DefaultCtx.OriginalURL()
+}
+
+func (c *Context) URIPath() string {
+	return c.DefaultCtx.Path()
+}
