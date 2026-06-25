@@ -29,6 +29,7 @@ func ToXFiberCtx(ctx fiber.Ctx) (*Context, error) {
 
 func WithLogger(name string) fiber.Handler {
 	return logger.New(logger.Config{
+			TimeFormat: "02/Jan/2006:15:04:05 -0700",
 			CustomTags: map[string]logger.LogFunc{
 				"logger_name": func(output logger.Buffer, c fiber.Ctx, data *logger.Data, extraParam string) (int, error) {
 					return output.WriteString(name)
@@ -38,7 +39,7 @@ func WithLogger(name string) fiber.Handler {
 				},
 			},
 			// For more options, see the Config section
-			Format: "[${logger_name}] ${time} | ${status} | \t ${latency} | ${host_name} | ${method} ${url}\n",
+			Format: "[${logger_name}] [${time}] | ${status} | \t ${latency} | ${host_name} | ${method} ${url}\n",
 			ForceColors: true,
 	})
 }
