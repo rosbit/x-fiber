@@ -18,8 +18,29 @@ type Context struct {
 	q url.Values
 }
 
-func (c *Context) Init() {
+type XFiberHandlerFunc func(c *Context)error
+
+func (c *Context) init() {
 	c.q = nil
+}
+
+func unwrap(handlerFunc XFiberHandlerFunc) func(fiber.Ctx)error {
+	return func(c fiber.Ctx) error {
+		if ctx, err := toXFiberCtx(c); err != nil {
+			return err
+		} else {
+			return handlerFunc(ctx)
+		}
+	}
+}
+
+func toXFiberCtx(ctx fiber.Ctx) (*Context, error) {
+	c, ok := ctx.(*Context)
+	if !ok {
+		return nil, fmt.Errorf("bad context")
+	}
+	c.init()
+	return c, nil
 }
 
 func (c *Context) Param(name string) string {
