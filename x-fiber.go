@@ -4,9 +4,10 @@ import (
 	"github.com/gofiber/fiber/v3/middleware/logger"
 	"github.com/gofiber/fiber/v3"
 	"time"
+	"io"
 )
 
-func WithLogger(name string) fiber.Handler {
+func WithLogger(name string, loggerWriter ...io.Writer) fiber.Handler {
 	return logger.New(logger.Config{
 			TimeFormat: time.RFC3339,
 			CustomTags: map[string]logger.LogFunc{
@@ -20,6 +21,7 @@ func WithLogger(name string) fiber.Handler {
 			// For more options, see the Config section
 			Format: "[${logger_name}] ${time} | ${status} | \t ${latency} | ${host_name} | ${method} ${url}\n",
 			ForceColors: true,
+			Stream: func()io.Writer{if len(loggerWriter)>0 {return loggerWriter[0]}; return nil}(),
 	})
 }
 
