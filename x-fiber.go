@@ -19,7 +19,7 @@ func WithLogger(name string, loggerWriter ...io.Writer) fiber.Handler {
 				},
 			},
 			// For more options, see the Config section
-			Format: "[${logger_name}] ${time} | ${status} | \t ${latency} | ${host_name} | ${method} ${url}\n",
+			Format: "[${logger_name}] ${time} | ${ip} ${status} | \t ${latency} | ${host_name} | ${method} ${url} | ${ua}\n",
 			ForceColors: true,
 			Stream: func()io.Writer{if len(loggerWriter)>0 {return loggerWriter[0]}; return nil}(),
 	})
