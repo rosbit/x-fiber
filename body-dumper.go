@@ -95,16 +95,17 @@ func createBodyDumppingFiberMiddleware(dumper io.Writer, reqPrompt, respPrompt s
 		// 2. 执行后续中间件与业务逻辑
 		err := c.Next()
 
-		h = c.GetRespHeaders()
-		fmt.Fprintf(dumper, "\n--- resp header begin ---\n")
-		for k, v := range h {
-			for _, vv := range v {
-				fmt.Fprintf(dumper, "%s: %s\n", k, vv)
-			}
-		}
-		fmt.Fprintf(dumper, "--- resp header end ---\n\n")
-
 		if len(respPrompt) > 0 {
+			// 2.5 dump response header
+			h = c.GetRespHeaders()
+			fmt.Fprintf(dumper, "\n--- resp header begin ---\n")
+			for k, v := range h {
+				for _, vv := range v {
+					fmt.Fprintf(dumper, "%s: %s\n", k, vv)
+				}
+			}
+			fmt.Fprintf(dumper, "--- resp header end ---\n\n")
+
 			// 3. 捕获响应体（必须在 c.Next() 之后）
 			resBody := c.Response().Body()
 
