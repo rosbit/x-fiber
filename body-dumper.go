@@ -70,6 +70,16 @@ func createBodyDumppingFiberMiddleware(dumper io.Writer, reqPrompt, respPrompt s
 			}
 		}
 
+		// 0. dump reqest headers
+		h := c.GetReqHeaders()
+		fmt.Fprintf(dumper, "--- req header begin ---\n")
+		for k, v := range h {
+			for _, vv := range v {
+				fmt.Fprintf(dumper, "%s: %s\n", k, vv)
+			}
+		}
+		fmt.Fprintf(dumper, "--- req header end ---\n\n")
+
 		// 1. 捕获请求体
 		reqBody := c.Body()
 		if len(reqBody) > 0 {
