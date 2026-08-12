@@ -264,6 +264,10 @@ func (c *Context) WriteHeader(statusCode int, contentType ...string) {
 	c.DefaultCtx.Status(statusCode)
 }
 
+func (c *Context) ResponseWriter() (w io.Writer) {
+	return c.Response().BodyWriter()
+}
+
 func (c *Context) writeContentType(contentType string) {
 	c.DefaultCtx.Set(fiber.HeaderContentType, contentType)
 }
@@ -293,6 +297,10 @@ func (c *Context) JSONBlob(code int, b []byte) (err error) {
 
 func (c *Context) JSONPretty(code int, i interface{}, indent string) (err error) {
 	return c.json(code, i, indent)
+}
+
+func (c *Context) JSON2(code int, i interface{}) (err error) {
+	return c.json(code, i, "")
 }
 
 func (c *Context) Stream(code int, contentType string, r io.Reader) (err error) {
